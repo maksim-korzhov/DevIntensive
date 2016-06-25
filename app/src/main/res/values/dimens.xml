@@ -19,4 +19,7 @@
     <dimen name="spacing_large_72">72dp</dimen>
     <dimen name="spacing_huge_96">96dp</dimen>
     <dimen name="spacing_giant_104">104dp</dimen>
+
+    <!-- Lines -->
+    <dimen name="line_thick_1">1dp</dimen>
 </resources>

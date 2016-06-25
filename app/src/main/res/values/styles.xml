@@ -8,4 +8,41 @@
         <item name="colorAccent">@color/color_accent</item>
     </style>
 
+    <style name="icon">
+        <item name="android:layout_width">@dimen/size_small_24</item>
+        <item name="android:layout_height">@dimen/size_small_24</item>
+    </style>
+
+    <style name="icon.left" parent="icon">
+        <item name="android:layout_gravity">top|left</item>
+        <item name="android:layout_marginTop">@dimen/size_small_24</item>
+        <item name="android:layout_marginLeft">@dimen/spacing_smaller_16</item>
+    </style>
+
+    <style name="icon.right" parent="icon">
+        <item name="android:layout_gravity">top|right</item>
+        <item name="android:layout_marginTop">@dimen/size_small_24</item>
+        <item name="android:layout_marginRight">@dimen/spacing_normal_32</item>
+    </style>
+
+    <style name="VerticalLinesStyle">
+        <item name="android:layout_width">@dimen/line_thick_1</item>
+        <item name="android:layout_height">@dimen/size_large_72</item>
+        <item name="android:background">@color/grey_light</item>
+    </style>
+
+    <style name="TopToolbarStyle">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">@dimen/size_large_72</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:gravity">center</item>
+    </style>
+    <style name="TopToolbarTextViewStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_horizontal</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 </resources>
