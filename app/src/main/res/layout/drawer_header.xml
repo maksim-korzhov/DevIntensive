@@ -5,7 +5,8 @@
                 android:paddingTop="@dimen/spacing_small_24"
                 android:paddingRight="@dimen/spacing_smaller_16"
                 android:paddingLeft="@dimen/spacing_smaller_16"
-                android:paddingBottom="@dimen/spacing_tiny_8">
+                android:paddingBottom="@dimen/spacing_tiny_8"
+                android:background="@drawable/header_bg">
 
     <ImageView
         android:layout_width="60dp"
@@ -16,7 +17,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/size_medium_56"
-        android:background="@color/color_primary"
         android:orientation="vertical"
         android:layout_alignParentBottom="true"
         android:gravity="center_vertical">

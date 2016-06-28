@@ -22,4 +22,8 @@
 
     <!-- Lines -->
     <dimen name="line_thick_1">1dp</dimen>
+
+    <!-- ImageView -->
+    <dimen name="profile_image_size">256dp</dimen>
+    <dimen name="fab_right_space">8dp</dimen>
 </resources>
