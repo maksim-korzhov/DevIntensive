@@ -1,6 +1,10 @@
 package com.softdesign.devintensive.ui.activities.ui.activities;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.Image;
 import android.os.Handler;
 import android.os.PersistableBundle;
@@ -22,10 +26,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
 import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
+import com.softdesign.devintensive.ui.activities.utils.RoundedAvatarDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +49,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DrawerLayout mNavigationDrawer;
     private FloatingActionButton mFab;
     private EditText mUserPhone, mUserMail, mUserVk, mUserGit, mUserBio;
+    private RoundedAvatarDrawable mRoundedAvatarDrawable;
+    private ImageView mUserRoundedAvatar;
+
+    private LinearLayout mGrayBlock;
+
 
     private List<EditText> mUserInfoViews;
 
@@ -74,6 +85,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         mCallImg = (ImageView) findViewById(R.id.call_img);
         mFab.setOnClickListener(this);
+
+        // Устанавливаем поведение серой плашки
+        /*mGrayBlock = (LinearLayout) findViewById(R.id.gray_block);
+        FancyLinearLayoutBehavior fancyBehavior = new FancyLinearLayoutBehavior();
+        CoordinatorLayout.LayoutParams params =
+                (CoordinatorLayout.LayoutParams) mGrayBlock.getLayoutParams();
+        params.setBehavior(fancyBehavior);*/
 
         setupToolbar();
         setupDrawer();
@@ -212,6 +230,17 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     return false;
                 }
             });
+
+            //mUserRoundedAvatar = (ImageView) findViewById(R.id.small_rounded_user_icon);
+            /*View headerView = mNavigationDrawer.inflateHeaderView(R.layout.drawer_header);
+            mUserRoundedAvatar = (ImageView) findViewById(R.id.small_rounded_user_icon);
+
+            Canvas canvas = new Canvas();
+            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maks_120);
+            mRoundedAvatarDrawable = new RoundedAvatarDrawable(bitmap);
+            mRoundedAvatarDrawable.draw(canvas);
+
+            mUserRoundedAvatar.setImageBitmap(bitmap);*/
         }
     }
 
