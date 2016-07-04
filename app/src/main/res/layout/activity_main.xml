@@ -35,6 +35,7 @@
                         android:layout_height="@dimen/profile_image_size"
                         android:scaleType="centerCrop"
                         android:src="@drawable/user_photo"
+                        android:contentDescription="@string/main_picture_desc"
                         android:fitsSystemWindows="true"/>
 
                     <android.support.v7.widget.Toolbar
@@ -82,7 +83,7 @@
                         <TextView
                             style="@style/TopToolbarTextViewStyle"
                             android:fontFamily="sans-serif-light"
-                            android:text="Рейтинг"/>
+                            android:text="@string/info_text_rating"/>
                     </LinearLayout>
 
                     <View
@@ -98,7 +99,7 @@
                         <TextView
                             style="@style/TopToolbarTextViewStyle"
                             android:fontFamily="sans-serif-light"
-                            android:text="Написано строк кода"/>
+                            android:text="@string/info_text_code"/>
                     </LinearLayout>
 
                     <View
@@ -113,7 +114,7 @@
                         <TextView
                             style="@style/TopToolbarTextViewStyle"
                             android:fontFamily="sans-serif-light"
-                            android:text="Проектов"/>
+                            android:text="@string/info_text_projects"/>
                     </LinearLayout>
                 </LinearLayout>
 
@@ -135,7 +136,9 @@
                     android:layout_gravity="bottom"
                     android:orientation="vertical"
                     android:layout_marginLeft="@dimen/spacing_normal_32"
-                    android:layout_marginRight="@dimen/spacing_smaller_16">
+                    android:layout_marginStart="@dimen/spacing_normal_32"
+                    android:layout_marginRight="@dimen/spacing_smaller_16"
+                    android:layout_marginEnd="@dimen/spacing_smaller_16">
 
                     <android.support.design.widget.TextInputLayout
                         android:layout_width="match_parent"
@@ -146,13 +149,13 @@
                             android:id="@+id/phone_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Мобильный телефон"
+                            android:hint="@string/mobile_phone"
                             android:inputType="phone"
                             android:textColor="@color/black"
                             android:textColorHint="@color/grey"
                             android:focusable="false"
                             android:enabled="false"
-                            android:text="+7(929) 801-25-66"
+                            android:text="@string/mobile_phone_nuber"
                             android:fontFamily="sans-serif-light">
                         </EditText>
 
@@ -201,12 +204,12 @@
                             android:id="@+id/email_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="E-mail"
+                            android:hint="@string/email"
                             android:textColor="@color/black"
                             android:textColorHint="@color/grey"
                             android:inputType="textEmailAddress"
                             android:enabled="false"
-                            android:text="korzhov.m.s@yandex.ru"
+                            android:text="@string/email_value"
                             android:focusable="false"
                             android:fontFamily="sans-serif-light">
                         </EditText>
@@ -256,12 +259,12 @@
                             android:id="@+id/vk_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Профиль в vk"
+                            android:hint="@string/vk"
                             android:textColor="@color/black"
                             android:textColorHint="@color/grey"
                             android:inputType="text"
                             android:enabled="false"
-                            android:text="https://vk.com/korzhovms"
+                            android:text="@string/vk_value"
                             android:focusable="false"
                             android:fontFamily="sans-serif-light"
                             >
@@ -311,11 +314,11 @@
                             android:id="@+id/github_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="Репозиторий"
+                            android:hint="@string/github"
                             android:textColor="@color/black"
                             android:textColorHint="@color/grey"
                             android:enabled="false"
-                            android:text="https://github.com/maksim-korzhov"
+                            android:text="@string/github_value"
                             android:focusable="false"
                             android:fontFamily="sans-serif-light"
                             >
@@ -365,11 +368,11 @@
                             android:id="@+id/about_et"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:hint="О себе"
+                            android:hint="@string/about"
                             android:textColor="@color/black"
                             android:textColorHint="@color/grey"
                             android:enabled="false"
-                            android:text="Программист, пишу сайты. Хочу изучить мобильную разработку, должно быть интересно."
+                            android:text="@string/about_value"
                             android:focusable="false"
                             android:fontFamily="sans-serif-light" >
                         </EditText>

@@ -31,7 +31,6 @@ import android.widget.LinearLayout;
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
 import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
-import com.softdesign.devintensive.ui.activities.utils.RoundedAvatarDrawable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +48,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private DrawerLayout mNavigationDrawer;
     private FloatingActionButton mFab;
     private EditText mUserPhone, mUserMail, mUserVk, mUserGit, mUserBio;
-    private RoundedAvatarDrawable mRoundedAvatarDrawable;
     private ImageView mUserRoundedAvatar;
 
     private LinearLayout mGrayBlock;
@@ -83,15 +81,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mUserInfoViews.add(mUserGit);
         mUserInfoViews.add(mUserBio);
 
-        mCallImg = (ImageView) findViewById(R.id.call_img);
         mFab.setOnClickListener(this);
-
-        // Устанавливаем поведение серой плашки
-        /*mGrayBlock = (LinearLayout) findViewById(R.id.gray_block);
-        FancyLinearLayoutBehavior fancyBehavior = new FancyLinearLayoutBehavior();
-        CoordinatorLayout.LayoutParams params =
-                (CoordinatorLayout.LayoutParams) mGrayBlock.getLayoutParams();
-        params.setBehavior(fancyBehavior);*/
 
         setupToolbar();
         setupDrawer();
@@ -108,7 +98,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    // Обработка клика по эдементу меню
+    /**
+     * Обработка клика по элементу меню
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if( item.getItemId() == android.R.id.home ) {
@@ -161,6 +155,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         Log.d(TAG, "onStart");
     }
 
+    /**
+     * Обработка события onClick
+     * @param v
+     */
     @Override
     public void onClick(View v) {
         switch( v.getId() ) {
@@ -176,7 +174,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
-    // Обработка нажатия кнопки назад
+    //
+
+    /**
+     * Обработка нажатия кнопки назад(закрываем Drawer)
+     */
     @Override
     public void onBackPressed() {
         if( mNavigationDrawer.isDrawerOpen(GravityCompat.START) ) {
@@ -184,27 +186,27 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Сохранение данных
+     * @param outState
+     */
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putInt(ConstantManager.EDIT_MODE_KEY, mCurrectEditorMode);
     }
 
-/*    private void runWithDelay() {
-        final Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                // TODO: выполнить с задержкой
-                hideProgress();
-            }
-        }, 5000);
-    }*/
-
+    /**
+     * Показываем Snackbar
+     * @param message
+     */
     private void showSnackbar( String message ) {
         Snackbar.make(mCoordinatorLayout, message, Snackbar.LENGTH_LONG).show();
     }
 
+    /**
+     * Настройка toolbar
+     */
     private void setupToolbar() {
         // Заменим actionbar на toolbar, он более гибкий и позволяет настраивать себя
         setSupportActionBar(mToolbar);
@@ -218,6 +220,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Создание Navigation Drawer. Обработка нажатий на кнопки меню
+     */
     private void setupDrawer() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
         if (navigationView != null) {
@@ -230,17 +235,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                     return false;
                 }
             });
-
-            //mUserRoundedAvatar = (ImageView) findViewById(R.id.small_rounded_user_icon);
-            /*View headerView = mNavigationDrawer.inflateHeaderView(R.layout.drawer_header);
-            mUserRoundedAvatar = (ImageView) findViewById(R.id.small_rounded_user_icon);
-
-            Canvas canvas = new Canvas();
-            Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.maks_120);
-            mRoundedAvatarDrawable = new RoundedAvatarDrawable(bitmap);
-            mRoundedAvatarDrawable.draw(canvas);
-
-            mUserRoundedAvatar.setImageBitmap(bitmap);*/
         }
     }
 
@@ -267,6 +261,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Загрузка информации о пользователе
+     */
     private void loadUserInfoValue() {
         List<String> userData = mDataManager.getPreferencesManager().loadUserProfileData();
         for (int i = 0; i < userData.size(); i++) {
@@ -274,6 +271,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Сохранение информации о пользователе
+     */
     private void saveUserInfoValue() {
         List<String> userData = new ArrayList<>();
         for (EditText userFieldView : mUserInfoViews) {
