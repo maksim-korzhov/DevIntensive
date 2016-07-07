@@ -14,4 +14,10 @@
     <string name="github_value">https://github.com/maksim-korzhov</string>
     <string name="about">О себе</string>
     <string name="about_value">Программист, пишу сайты. Хочу изучить мобильную разработку, должно быть интересно.</string>
+    <string name="user_profile.placeholder.image">Изменить фотографию профиля</string>
+    <string name="user_profile_dialog_gallery">Выбрать фото из галереи</string>
+    <string name="user_profile_dialog_camera">Сделать снимок</string>
+    <string name="user_profile_dialog_cancel">Отмена</string>
+    <string name="user_profile_dialog_title">Изменить фотографию профиля</string>
+    <string name="user_profile.choose.message">Выберите фото</string>
 </resources>
