@@ -23,4 +23,8 @@
     <string name="error_user_profile_link_empty">Укажите правильную ссылку!</string>
     <string name="error_user_profile_phone_empty">Не указан телефон!</string>
     <string name="error_user_profile_email_empty">Не указан E-mail!</string>
+    <string name="login_form_header">ВОЙТИ</string>
+    <string name="auth.title.input">ВОЙТИ</string>
+    <string name="login_form_email">E-mail</string>
+    <string name="login_form_pass">Пароль</string>
 </resources>
