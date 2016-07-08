@@ -20,4 +20,7 @@
     <string name="user_profile_dialog_cancel">Отмена</string>
     <string name="user_profile_dialog_title">Изменить фотографию профиля</string>
     <string name="user_profile.choose.message">Выберите фото</string>
+    <string name="error_user_profile_link_empty">Укажите правильную ссылку!</string>
+    <string name="error_user_profile_phone_empty">Не указан телефон!</string>
+    <string name="error_user_profile_email_empty">Не указан E-mail!</string>
 </resources>

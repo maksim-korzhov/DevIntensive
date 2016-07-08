@@ -113,7 +113,7 @@
             </LinearLayout>
 
             <ImageView
-                android:id="@+id/call_img"
+                android:id="@+id/call_trigger"
                 style="@style/icon.right"
                 android:src="@drawable/ic_phone_in_talk_black_24dp"/>
 
@@ -168,6 +168,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/email_trigger"
                 style="@style/icon.right"
                 android:src="@drawable/ic_send_black_24dp"/>
 
@@ -224,6 +225,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/vk_trigger"
                 style="@style/icon.right"
                 android:src="@drawable/ic_visibility_black_24dp"/>
 
@@ -278,6 +280,7 @@
             </LinearLayout>
 
             <ImageView
+                android:id="@+id/github_trigger"
                 style="@style/icon.right"
                 android:src="@drawable/ic_visibility_black_24dp"/>
 
