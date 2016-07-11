@@ -1,3 +1,30 @@
 <resources>
     <string name="app_name">Коржов Максим</string>
+    <string name="main_picture_desc">Главная картинка</string>
+    <string name="info_text_rating">Рейтинг</string>
+    <string name="info_text_code">Написано строк кода</string>
+    <string name="info_text_projects">Проектов</string>
+    <string name="mobile_phone">Мобильный телефон</string>
+    <string name="mobile_phone_nuber">+7(929) 801-25-66</string>
+    <string name="email">E-mail</string>
+    <string name="email_value">korzhov.m.s@yandex.ru</string>
+    <string name="vk">Профиль в vk</string>
+    <string name="vk_value">https://vk.com/korzhovms</string>
+    <string name="github">Репозиторий</string>
+    <string name="github_value">https://github.com/maksim-korzhov</string>
+    <string name="about">О себе</string>
+    <string name="about_value">Программист, пишу сайты. Хочу изучить мобильную разработку, должно быть интересно.</string>
+    <string name="user_profile.placeholder.image">Изменить фотографию профиля</string>
+    <string name="user_profile_dialog_gallery">Выбрать фото из галереи</string>
+    <string name="user_profile_dialog_camera">Сделать снимок</string>
+    <string name="user_profile_dialog_cancel">Отмена</string>
+    <string name="user_profile_dialog_title">Изменить фотографию профиля</string>
+    <string name="user_profile.choose.message">Выберите фото</string>
+    <string name="error_user_profile_link_empty">Укажите правильную ссылку!</string>
+    <string name="error_user_profile_phone_empty">Не указан телефон!</string>
+    <string name="error_user_profile_email_empty">Не указан E-mail!</string>
+    <string name="login_form_header">ВОЙТИ</string>
+    <string name="auth.title.input">ВОЙТИ</string>
+    <string name="login_form_email">E-mail</string>
+    <string name="login_form_pass">Пароль</string>
 </resources>

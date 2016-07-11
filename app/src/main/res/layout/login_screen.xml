@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <LinearLayout
+        android:layout_width="@dimen/auth_layout_width"
+        android:layout_height="wrap_content"
+        style="@style/auth_layout_style">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/auth.title.input"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/orange_dark"
+            android:textSize="20sp"/>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/auth_textinput_style"
+            android:hint="@string/login_form_email">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/auth_login"
+                android:inputType="textEmailAddress"
+                style="@style/auth_textfield_style"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/auth_textinput_style"
+            android:hint="@string/login_form_pass">
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/auth_password"
+                android:inputType="textPassword"
+                style="@style/auth_textfield_style"/>
+        </android.support.design.widget.TextInputLayout>
+
+        <Button
+            android:id="@+id/auth_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/auth_button"
+            android:text="@string/auth.title.input"/>
+
+        <TextView
+            android:id="@+id/forgot_pass"
+            style="@style/auth_clicktable_textview_style"/>
+    </LinearLayout>
+</FrameLayout>
