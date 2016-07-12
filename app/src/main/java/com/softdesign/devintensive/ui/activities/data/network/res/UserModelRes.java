@@ -135,6 +135,8 @@ public class UserModelRes {
         public int getRaiting() {
             return rait;
         }
+
+
     }
 
     public class Data {
