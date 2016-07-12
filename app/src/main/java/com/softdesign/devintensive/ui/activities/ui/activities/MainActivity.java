@@ -25,6 +25,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -46,6 +47,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -601,12 +607,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .load(selectedimage)
                 .into(mProfileImage);
 
-        mDataManager.getPreferencesManager().saveUserPhoto(mSelectedimage);
+        if (!selectedimage.equals(mDataManager.getPreferencesManager().loadUserPhoto())) {
+            mDataManager.getPreferencesManager().saveUserPhoto(mSelectedimage);
+
+            // upload to server
+            uploadPhoto(new File(selectedimage.getPath()));
+        }
     }
 
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName()));
 
         startActivityForResult(appSettingsIntent, ConstantManager.PERMISSION_REQUEST_SETTINGS_CODE);
+    }
+
+    /**
+     * Загружает фотографию из профиля пользователя на сервер
+     * @param photoFile представление файла фотографии
+     */
+    private void uploadPhoto(File photoFile) {
+        Call<ResponseBody> call = mDataManager.uploadPhoto(photoFile);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("TAG", "Upload success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                showSnackbar("Не удалось загрузить фотографию на сервер");
+                Log.e("TAG", t.getMessage());
+            }
+        });
     }
 }
