@@ -76,11 +76,14 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private File mPhotoFile = null;
     private Uri mSelectedimage = null;
     private ImageView mProfileImage;
+    private ImageView mProfileAvatar;
 
     private ImageView mCallTrigger;
     private ImageView mEmailTrigger;
     private ImageView mVkTrigger;
     private ImageView mGithubTrigger;
+
+    private TextView mUserName, mUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -144,6 +147,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .load(mDataManager.getPreferencesManager().loadUserPhoto())
                 .placeholder(R.drawable.user_photo) // TODO: 07.07.2016 Сделать placeholder + transform + crop
                 .into(mProfileImage);
+
+        Picasso.with(this)
+                .load(mDataManager.getPreferencesManager().loadUserAvatar())
+                .placeholder(R.drawable.maks_120) // TODO: 07.07.2016 Сделать placeholder + transform + crop
+                .fit()
+                .into(mProfileAvatar);
 
         List<String> test = mDataManager.getPreferencesManager().loadUserProfileData();
 
@@ -231,7 +240,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.profile_placeholder:
-                // TODO 6.07.2016 Следать выбор из галлереи или из камеры загружаем фото
                 showDialog(ConstantManager.LOAD_PROFILE_PHOTO);
                 break;
 
@@ -346,6 +354,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void setupDrawer() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        View header = navigationView.getHeaderView(0);
+
+        mUserName = (TextView)header.findViewById(R.id.user_name_txt);
+        mUserEmail = (TextView)header.findViewById(R.id.user_email_txt);
+        mProfileAvatar = (ImageView) header.findViewById(R.id.small_rounded_user_icon);
+
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -425,6 +439,13 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         for (int i = 0; i < userData.size(); i++) {
             mUserInfoViews.get(i).setText(userData.get(i));
         }
+
+        // Init data for navigation drawer header
+        mUserEmail.setText(userData.get(1));
+
+        List<String> userNames = mDataManager.getPreferencesManager().loadUserName();
+        String concatName = userNames.get(0) + " " + userNames.get(1);
+        mUserName.setText(concatName);
     }
 
     /**

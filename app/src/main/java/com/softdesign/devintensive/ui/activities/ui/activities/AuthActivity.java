@@ -17,7 +17,9 @@ import com.softdesign.devintensive.ui.activities.data.network.req.UserLoginReq;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserModelRes;
 import com.softdesign.devintensive.ui.activities.utils.NetworkStatusChecker;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -78,6 +80,8 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         mDataManager.getPreferencesManager().saveAuthToken(userModel.getData().getToken());
         mDataManager.getPreferencesManager().saveUserId(userModel.getData().getUser().getId());
         saveUserValues(userModel);
+        saveUserData(userModel);
+        saveUserPhotos(userModel);
 
         Intent loginIntent = new Intent(this, MainActivity.class);
         startActivity(loginIntent);
@@ -108,6 +112,10 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         }
     }
 
+    /**
+     * Получим рейтинг, строки кода и проекты из модели
+     * @param userModel
+     */
     private void saveUserValues(UserModelRes userModel) {
         int[] userValues = {
                 userModel.getData().getUser().getProfileValues().getRaiting(),
@@ -116,5 +124,34 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         };
 
         mDataManager.getPreferencesManager().saveUserProfileValues(userValues);
+    }
+
+    /**
+     * Получим все остальные данные из модели
+     * @param userModel
+     */
+    private void saveUserData( UserModelRes userModel ) {
+        List<String> userData = new ArrayList<>();
+
+        userData.add(userModel.getData().getUser().getContactsData().getPhone());
+        userData.add(userModel.getData().getUser().getContactsData().getEmail());
+        userData.add(userModel.getData().getUser().getContactsData().getVk());
+        userData.add(userModel.getData().getUser().getRepositories().getSingleRepoLink());
+        userData.add(userModel.getData().getUser().getPublicInfo().getBio());
+
+        mDataManager.getPreferencesManager().saveUserProfileData(userData);
+
+        String userFirstName = userModel.getData().getUser().getFirstName();
+        String userSecondName = userModel.getData().getUser().getSecondName();
+
+        mDataManager.getPreferencesManager().saveUserName(userFirstName, userSecondName);
+    }
+
+    private void saveUserPhotos( UserModelRes userModel ) {
+        Uri avatar = Uri.parse(userModel.getData().getUser().getPublicInfo().getAvatar());
+        Uri photo = Uri.parse(userModel.getData().getUser().getPublicInfo().getPhoto());
+
+        mDataManager.getPreferencesManager().saveUserPhoto(photo);
+        mDataManager.getPreferencesManager().saveUserAvatar(avatar);
     }
 }

@@ -62,6 +62,26 @@ public class UserModelRes {
         public ProfileValues getProfileValues() {
             return profileValues;
         }
+
+        public Contacts getContactsData() {
+            return contacts;
+        }
+
+        public Repositories getRepositories() {
+            return repositories;
+        }
+
+        public PublicInfo getPublicInfo() {
+            return publicInfo;
+        }
+
+        public String getFirstName() {
+            return firstName;
+        }
+
+        public String getSecondName() {
+            return secondName;
+        }
     }
 
     public class Repositories {
@@ -73,6 +93,34 @@ public class UserModelRes {
         @Expose
         private String updated;
 
+        public List<Repo> getRepo() {
+            return repo;
+        }
+
+        /**
+         * Return list of repos
+         */
+        /*public String[] getReposAsStringArray() {
+            List<Repo> repos = this.getRepo();
+            String[] repoLinks = {};
+            for( int i = 0; i < repos.size(); i++ ) {
+                repoLinks[i] = repos.get(i).getGit().toString();
+            }
+
+            return repoLinks;
+        }*/
+
+        /**
+         * Return single repo link
+         */
+
+        public String getSingleRepoLink() {
+            List<Repo> repos = this.getRepo();
+            String repoLink = "";
+            repoLink = repos.get(0).getGit().toString();
+
+            return repoLink;
+        }
     }
 
     public class Repo {
@@ -87,6 +135,9 @@ public class UserModelRes {
         @Expose
         private String title;
 
+        public String getGit() {
+            return git;
+        }
     }
 
     public class PublicInfo {
@@ -104,6 +155,17 @@ public class UserModelRes {
         @Expose
         private String updated;
 
+        public String getBio() {
+            return bio;
+        }
+
+        public String getAvatar() {
+            return avatar;
+        }
+
+        public String getPhoto() {
+            return photo;
+        }
     }
 
     public class ProfileValues {
@@ -172,5 +234,16 @@ public class UserModelRes {
         @Expose
         private String updated;
 
+        public String getVk() {
+            return vk;
+        }
+
+        public String getPhone() {
+            return phone;
+        }
+
+        public String getEmail() {
+            return email;
+        }
     }
 }

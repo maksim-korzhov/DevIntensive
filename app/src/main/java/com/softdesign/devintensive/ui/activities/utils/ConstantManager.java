@@ -12,6 +12,10 @@ public interface ConstantManager {
     String USER_GIT_KEY = "USER_4_KEY";
     String USER_BIO_KEY = "USER_5_KEY";
     String USER_PHOTO_KEY = "USER_PHOTO_KEY";
+    String USER_AVATAR_KEY = "USER_AVATAR_KEY";
+
+    String USER_FIRST_NAME = "USER_FIRST_NAME";
+    String USER_SECOND_NAME = "USER_SECOND_NAME";
 
     // Auth
     String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
