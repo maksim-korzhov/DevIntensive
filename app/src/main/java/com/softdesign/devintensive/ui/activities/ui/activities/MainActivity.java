@@ -3,21 +3,12 @@ package com.softdesign.devintensive.ui.activities.ui.activities;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -33,18 +24,16 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
@@ -80,6 +69,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     private LinearLayout mGrayBlock;
 
     private List<EditText> mUserInfoViews;
+
+    private TextView mUserValueRating, mUserValueCodeLines, mUserValueProjects;
+    private List<TextView> mUserValueViews;
 
     private File mPhotoFile = null;
     private Uri mSelectedimage = null;
@@ -120,6 +112,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mUserInfoViews.add(mUserGit);
         mUserInfoViews.add(mUserBio);
 
+        mUserValueRating = (TextView) findViewById(R.id.user_rait_value_txt);
+        mUserValueCodeLines = (TextView) findViewById(R.id.user_code_lines_txt);
+        mUserValueProjects = (TextView) findViewById(R.id.user_projects_txt);
+
+        mUserValueViews = new ArrayList<>();
+        mUserValueViews.add(mUserValueRating);
+        mUserValueViews.add(mUserValueCodeLines);
+        mUserValueViews.add(mUserValueProjects);
+
         mFab.setOnClickListener(this);
         mProfilePlaceholder.setOnClickListener(this);
 
@@ -136,7 +137,9 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         setupToolbar();
         setupDrawer();
-        loadUserInfoValue();
+        initUserFields();
+        initUserInfoValue();
+
         Picasso.with(this)
                 .load(mDataManager.getPreferencesManager().loadUserPhoto())
                 .placeholder(R.drawable.user_photo) // TODO: 07.07.2016 Сделать placeholder + transform + crop
@@ -186,7 +189,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onPause();
 
         Log.d(TAG, "onPause");
-        //saveUserInfoValue();
+        //saveUserFields();
     }
 
     @Override
@@ -409,7 +412,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             hideProfilePlaceholder();
             unlockToolbar();
-            //saveUserInfoValue();
+            //saveUserFields();
             mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.white));
         }
     }
@@ -417,7 +420,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /**
      * Загрузка информации о пользователе
      */
-    private void loadUserInfoValue() {
+    private void initUserFields() {
         List<String> userData = mDataManager.getPreferencesManager().loadUserProfileData();
         for (int i = 0; i < userData.size(); i++) {
             mUserInfoViews.get(i).setText(userData.get(i));
@@ -427,12 +430,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /**
      * Сохранение информации о пользователе
      */
-    private void saveUserInfoValue() {
+    private void saveUserFields() {
         List<String> userData = new ArrayList<>();
         for (EditText userFieldView : mUserInfoViews) {
             userData.add(userFieldView.getText().toString());
         }
         mDataManager.getPreferencesManager().saveUserProfileData(userData);
+    }
+
+    private void initUserInfoValue() {
+        List<String> userData = mDataManager.getPreferencesManager().loadUserProfileValues();
+        for (int i = 0; i < userData.size(); i++) {
+            mUserValueViews.get(i).setText(userData.get(i));
+        }
     }
 
     private void loadPhotoFromGallery() {

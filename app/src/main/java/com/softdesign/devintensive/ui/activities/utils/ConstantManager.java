@@ -13,6 +13,14 @@ public interface ConstantManager {
     String USER_BIO_KEY = "USER_5_KEY";
     String USER_PHOTO_KEY = "USER_PHOTO_KEY";
 
+    // Auth
+    String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
+    String USER_ID_KEY = "USER_ID_KEY";
+
+    String USER_RAITING_VALUE = "USER_RAITING_VALUE";
+    String USER_CODE_LINES_VALUE = "USER_CODE_LINES_VALUE";
+    String USER_PROJECT_VALUE = "USER_PROJECT_VALUE";
+
     int LOAD_PROFILE_PHOTO = 1;
     int REQUEST_CAMERA_PICTURE = 99;
     int REQUEST_GALLERY_PICTURE = 88;
