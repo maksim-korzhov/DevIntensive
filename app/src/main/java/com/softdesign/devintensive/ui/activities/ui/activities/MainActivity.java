@@ -3,21 +3,12 @@ package com.softdesign.devintensive.ui.activities.ui.activities;
 import android.Manifest;
 import android.app.Dialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Environment;
-import android.os.Handler;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -33,18 +24,17 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.ActionMode;
+import android.support.v7.widget.ThemedSpinnerAdapter;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
@@ -57,6 +47,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
@@ -81,14 +76,20 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private List<EditText> mUserInfoViews;
 
+    private TextView mUserValueRating, mUserValueCodeLines, mUserValueProjects;
+    private List<TextView> mUserValueViews;
+
     private File mPhotoFile = null;
     private Uri mSelectedimage = null;
     private ImageView mProfileImage;
+    private ImageView mProfileAvatar;
 
     private ImageView mCallTrigger;
     private ImageView mEmailTrigger;
     private ImageView mVkTrigger;
     private ImageView mGithubTrigger;
+
+    private TextView mUserName, mUserEmail;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -120,6 +121,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mUserInfoViews.add(mUserGit);
         mUserInfoViews.add(mUserBio);
 
+        mUserValueRating = (TextView) findViewById(R.id.user_rait_value_txt);
+        mUserValueCodeLines = (TextView) findViewById(R.id.user_code_lines_txt);
+        mUserValueProjects = (TextView) findViewById(R.id.user_projects_txt);
+
+        mUserValueViews = new ArrayList<>();
+        mUserValueViews.add(mUserValueRating);
+        mUserValueViews.add(mUserValueCodeLines);
+        mUserValueViews.add(mUserValueProjects);
+
         mFab.setOnClickListener(this);
         mProfilePlaceholder.setOnClickListener(this);
 
@@ -136,11 +146,19 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
         setupToolbar();
         setupDrawer();
-        loadUserInfoValue();
+        initUserFields();
+        initUserInfoValue();
+
         Picasso.with(this)
                 .load(mDataManager.getPreferencesManager().loadUserPhoto())
                 .placeholder(R.drawable.user_photo) // TODO: 07.07.2016 Сделать placeholder + transform + crop
                 .into(mProfileImage);
+
+        Picasso.with(this)
+                .load(mDataManager.getPreferencesManager().loadUserAvatar())
+                .placeholder(R.drawable.maks_120) // TODO: 07.07.2016 Сделать placeholder + transform + crop
+                .fit()
+                .into(mProfileAvatar);
 
         List<String> test = mDataManager.getPreferencesManager().loadUserProfileData();
 
@@ -186,7 +204,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         super.onPause();
 
         Log.d(TAG, "onPause");
-        //saveUserInfoValue();
+        //saveUserFields();
     }
 
     @Override
@@ -228,7 +246,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 break;
 
             case R.id.profile_placeholder:
-                // TODO 6.07.2016 Следать выбор из галлереи или из камеры загружаем фото
                 showDialog(ConstantManager.LOAD_PROFILE_PHOTO);
                 break;
 
@@ -343,6 +360,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
      */
     private void setupDrawer() {
         NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        View header = navigationView.getHeaderView(0);
+
+        mUserName = (TextView)header.findViewById(R.id.user_name_txt);
+        mUserEmail = (TextView)header.findViewById(R.id.user_email_txt);
+        mProfileAvatar = (ImageView) header.findViewById(R.id.small_rounded_user_icon);
+
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -409,7 +432,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
 
             hideProfilePlaceholder();
             unlockToolbar();
-            //saveUserInfoValue();
+            //saveUserFields();
             mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.white));
         }
     }
@@ -417,22 +440,36 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
     /**
      * Загрузка информации о пользователе
      */
-    private void loadUserInfoValue() {
+    private void initUserFields() {
         List<String> userData = mDataManager.getPreferencesManager().loadUserProfileData();
         for (int i = 0; i < userData.size(); i++) {
             mUserInfoViews.get(i).setText(userData.get(i));
         }
+
+        // Init data for navigation drawer header
+        mUserEmail.setText(userData.get(1));
+
+        List<String> userNames = mDataManager.getPreferencesManager().loadUserName();
+        String concatName = userNames.get(0) + " " + userNames.get(1);
+        mUserName.setText(concatName);
     }
 
     /**
      * Сохранение информации о пользователе
      */
-    private void saveUserInfoValue() {
+    private void saveUserFields() {
         List<String> userData = new ArrayList<>();
         for (EditText userFieldView : mUserInfoViews) {
             userData.add(userFieldView.getText().toString());
         }
         mDataManager.getPreferencesManager().saveUserProfileData(userData);
+    }
+
+    private void initUserInfoValue() {
+        List<String> userData = mDataManager.getPreferencesManager().loadUserProfileValues();
+        for (int i = 0; i < userData.size(); i++) {
+            mUserValueViews.get(i).setText(userData.get(i));
+        }
     }
 
     private void loadPhotoFromGallery() {
@@ -570,12 +607,37 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 .load(selectedimage)
                 .into(mProfileImage);
 
-        mDataManager.getPreferencesManager().saveUserPhoto(mSelectedimage);
+        if (!selectedimage.equals(mDataManager.getPreferencesManager().loadUserPhoto())) {
+            mDataManager.getPreferencesManager().saveUserPhoto(mSelectedimage);
+
+            // upload to server
+            uploadPhoto(new File(selectedimage.getPath()));
+        }
     }
 
     public void openApplicationSettings() {
         Intent appSettingsIntent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:" + getPackageName()));
 
         startActivityForResult(appSettingsIntent, ConstantManager.PERMISSION_REQUEST_SETTINGS_CODE);
+    }
+
+    /**
+     * Загружает фотографию из профиля пользователя на сервер
+     * @param photoFile представление файла фотографии
+     */
+    private void uploadPhoto(File photoFile) {
+        Call<ResponseBody> call = mDataManager.uploadPhoto(photoFile);
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.d("TAG", "Upload success");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                showSnackbar("Не удалось загрузить фотографию на сервер");
+                Log.e("TAG", t.getMessage());
+            }
+        });
     }
 }

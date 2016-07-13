@@ -26,6 +26,7 @@
             <LinearLayout
                 style="@style/TopToolbarStyle">
                 <TextView
+                    android:id="@+id/user_rait_value_txt"
                     style="@style/TopToolbarTextViewStyle"
                     android:fontFamily="sans-serif-light"
                     android:text="5"/>
@@ -42,6 +43,7 @@
                 style="@style/TopToolbarStyle"
                 android:layout_weight="2">
                 <TextView
+                    android:id="@+id/user_code_lines_txt"
                     style="@style/TopToolbarTextViewStyle"
                     android:fontFamily="sans-serif-light"
                     android:text="5"/>
@@ -57,6 +59,7 @@
             <LinearLayout
                 style="@style/TopToolbarStyle">
                 <TextView
+                    android:id="@+id/user_projects_txt"
                     style="@style/TopToolbarTextViewStyle"
                     android:fontFamily="sans-serif-light"
                     android:text="5"/>
