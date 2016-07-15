@@ -27,8 +27,12 @@ public class AspectRatioImageView extends ImageView {
         int newHeight;
 
         newWidth = getMeasuredWidth();
-        newHeight = (int) (newWidth/mAspectRatio);
+        newHeight = getAspectRatioHeight(newWidth, DEFAULT_ASPECT_RATIO);
 
         setMeasuredDimension(newWidth, newHeight);
+    }
+
+    public static int getAspectRatioHeight( int widthMeasureSpec, float aspectRatio ) {
+        return (int) (widthMeasureSpec/aspectRatio);
     }
 }

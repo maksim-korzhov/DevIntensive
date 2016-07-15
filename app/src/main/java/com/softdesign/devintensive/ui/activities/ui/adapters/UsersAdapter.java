@@ -1,6 +1,7 @@
 package com.softdesign.devintensive.ui.activities.ui.adapters;
 
 import android.content.Context;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,10 @@ import android.widget.TextView;
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
 import com.softdesign.devintensive.ui.activities.ui.views.AspectRatioImageView;
+import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
@@ -20,6 +23,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     private Context mContext;
     private List<UserListRes.UserData> mUsers;
     private UserViewHolder.CustomClickListener mCustomClickListener;
+    private int mViewWidth;
+    private int mViewHeight;
 
     public UsersAdapter(List<UserListRes.UserData> users, UserViewHolder.CustomClickListener customClickListener) {
         mUsers = users;
@@ -30,6 +35,11 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         mContext = parent.getContext();
         View convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_list, parent, false);
+
+        // Get view width for picasso resizing
+        mViewWidth = parent.getMeasuredWidth();
+        mViewHeight = AspectRatioImageView.getAspectRatioHeight(mViewWidth, ConstantManager.CURRENT_ASPECT_RATIO);
+
         return new UserViewHolder(convertView, mCustomClickListener);
     }
 
@@ -41,6 +51,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
                 .load(user.getPublicInfo().getPhoto())
                 .placeholder(mContext.getResources().getDrawable(R.drawable.user_photo))
                 .error(mContext.getResources().getDrawable(R.drawable.user_photo))
+                .resize(mViewWidth, mViewHeight)
+                .centerCrop()
                 .into(holder.userPhoto);
 
         holder.mFullName.setText(user.getFullName());
