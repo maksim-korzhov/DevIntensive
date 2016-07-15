@@ -5,6 +5,7 @@ import android.content.Context;
 import com.softdesign.devintensive.ui.activities.data.network.RestService;
 import com.softdesign.devintensive.ui.activities.data.network.ServiceGenerator;
 import com.softdesign.devintensive.ui.activities.data.network.req.UserLoginReq;
+import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserModelRes;
 
 import java.io.File;
@@ -53,6 +54,10 @@ public class DataManager {
         MultipartBody.Part bodyPart =
                 MultipartBody.Part.createFormData("photo", photoFile.getName(), requestBody);
         return mRestService.uploadImage(bodyPart);
+    }
+
+    public Call<UserListRes> getUserList() {
+        return mRestService.getUserList();
     }
     // endregion
 }
