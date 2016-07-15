@@ -1,5 +1,6 @@
 package com.softdesign.devintensive.ui.activities.ui.activities;
 
+import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
@@ -7,14 +8,18 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
 
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
+import com.softdesign.devintensive.ui.activities.data.storage.models.UserDTO;
 import com.softdesign.devintensive.ui.activities.ui.adapters.UsersAdapter;
 import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
 
@@ -38,6 +43,8 @@ public class UserListActivity extends AppCompatActivity {
     private UsersAdapter mUsersAdapter;
     private List<UserListRes.UserData> mUsers;
 
+    LinearLayoutManager mLinearLayoutManager;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +55,14 @@ public class UserListActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.toolbar);
         mNavigationDrawer = (DrawerLayout) findViewById(R.id.navigation_drawer);
         mRecyclerView = (RecyclerView) findViewById(R.id.user_list);
+
+        /* Set default adapter */
+//        mUsers = new ArrayList<>();
+//        mUsersAdapter = new UsersAdapter(mUsers);
+//        mRecyclerView.setAdapter(mUsersAdapter);
+
+        mLinearLayoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(mLinearLayoutManager);
 
         setupToolbar();
         setupDrawer();
@@ -73,13 +88,26 @@ public class UserListActivity extends AppCompatActivity {
 
             @Override
             public void onResponse(Call<UserListRes> call, Response<UserListRes> response) {
-                if (response.code() == 200) {
-                    mUsers = (List<UserListRes.UserData>) response.body().getData();
-                    mUsersAdapter = new UsersAdapter(mUsers);
-                    mRecyclerView.setAdapter(mUsersAdapter);
-                } else {
-                    showSnackbar("Ошибка!");
-                    Log.e(TAG, "Ошибка");
+                try {
+                    if (response.code() == 200) {
+                        mUsers = response.body().getData();
+                        mUsersAdapter = new UsersAdapter(mUsers, new UsersAdapter.UserViewHolder.CustomClickListener() {
+                            @Override
+                            public void onUserItemClickListener(int position) {
+                                UserDTO userDTO = new UserDTO(mUsers.get(position));
+                                Intent profileIntent = new Intent(UserListActivity.this, ProfileUserActivity.class);
+                                profileIntent.putExtra(ConstantManager.PARCELABLE_KEY, userDTO);
+
+                                startActivity(profileIntent);
+                            }
+                        });
+                        mRecyclerView.setAdapter(mUsersAdapter);
+                    } else {
+                        showSnackbar("Ошибка!");
+                        Log.e(TAG, "Ошибка");
+                    }
+                } catch( Exception e ) {
+                    Log.e(TAG, e.getMessage());
                 }
             }
 
