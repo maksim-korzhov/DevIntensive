@@ -1,5 +1,6 @@
 package com.softdesign.devintensive.ui.activities.ui.activities;
 
+import android.app.FragmentManager;
 import android.content.Intent;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
@@ -24,6 +25,7 @@ import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
 import com.softdesign.devintensive.ui.activities.data.storage.models.UserDTO;
 import com.softdesign.devintensive.ui.activities.ui.adapters.UsersAdapter;
+import com.softdesign.devintensive.ui.activities.ui.fragments.RetainedFragment;
 import com.softdesign.devintensive.ui.activities.ui.views.AspectRatioImageView;
 import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
 import com.squareup.picasso.Picasso;
@@ -35,7 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class UserListActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class UserListActivity extends BaseActivity implements SearchView.OnQueryTextListener {
 
     public static final String TAG = ConstantManager.TAG_PREFIX + " UserListActivity";
 
@@ -48,12 +50,16 @@ public class UserListActivity extends AppCompatActivity implements SearchView.On
     private UsersAdapter mUsersAdapter;
     private List<UserListRes.UserData> mUsers;
 
+    private RetainedFragment dataFragment;
+
     LinearLayoutManager mLinearLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_list);
+
+        showProgress();
 
         mDataManager = DataManager.getInstance();
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordinator_container);
@@ -66,7 +72,25 @@ public class UserListActivity extends AppCompatActivity implements SearchView.On
 
         setupToolbar();
         setupDrawer();
-        loadUsers();
+
+        FragmentManager fragmentManager = getFragmentManager();
+        dataFragment = (RetainedFragment) fragmentManager.findFragmentByTag("mData");
+
+
+        if (dataFragment == null) {
+            dataFragment = new RetainedFragment();
+            fragmentManager.beginTransaction().add(dataFragment, "mData").commit();
+            loadUsers();
+        } else {
+            mUsers = dataFragment.getData();
+            setNewAdapter(mUsers);
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        dataFragment.setData(mUsers);
     }
 
     @Override
@@ -120,6 +144,7 @@ public class UserListActivity extends AppCompatActivity implements SearchView.On
             }
         });
         mRecyclerView.setAdapter(mUsersAdapter);
+        hideProgress();
     }
 
     private void setupDrawer() {
