@@ -34,4 +34,5 @@
     <dimen name="auth_layout_width">256dp</dimen>
     <dimen name="font_medium_20">20dp</dimen>
     <dimen name="font_size_14">14dp</dimen>
+    <dimen name="font_large_24">24dp</dimen>
 </resources>

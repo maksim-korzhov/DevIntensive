@@ -30,4 +30,8 @@ public interface ConstantManager {
     int REQUEST_GALLERY_PICTURE = 88;
     int PERMISSION_REQUEST_SETTINGS_CODE = 101;
     int CAMERA_REQUEST_PERMISSION_CODE = 102;
+
+    String PARCELABLE_KEY = "PARCELABLE_KEY";
+
+    public float CURRENT_ASPECT_RATIO = 1.78f;
 }
