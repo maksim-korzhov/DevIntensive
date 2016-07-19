@@ -2,10 +2,12 @@ package com.softdesign.devintensive.ui.activities.ui.activities;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Handler;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,7 +16,16 @@ import android.widget.TextView;
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
 import com.softdesign.devintensive.ui.activities.data.network.req.UserLoginReq;
+import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
 import com.softdesign.devintensive.ui.activities.data.network.res.UserModelRes;
+import com.softdesign.devintensive.ui.activities.data.storage.models.Repository;
+import com.softdesign.devintensive.ui.activities.data.storage.models.RepositoryDao;
+import com.softdesign.devintensive.ui.activities.data.storage.models.User;
+import com.softdesign.devintensive.ui.activities.data.storage.models.UserDTO;
+import com.softdesign.devintensive.ui.activities.data.storage.models.UserDao;
+import com.softdesign.devintensive.ui.activities.ui.adapters.UsersAdapter;
+import com.softdesign.devintensive.ui.activities.utils.AppConfig;
+import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
 import com.softdesign.devintensive.ui.activities.utils.NetworkStatusChecker;
 
 import java.util.ArrayList;
@@ -33,6 +44,8 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
     private CoordinatorLayout mCoordinatorLayout;
 
     private DataManager mDataManager;
+    private RepositoryDao mRepositoryDao;
+    private UserDao mUserDao;
 
     public AuthActivity() {
     }
@@ -43,6 +56,8 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         setContentView(R.layout.activity_auth);
 
         mDataManager = DataManager.getInstance();
+        mUserDao = mDataManager.getDaoSession().getUserDao();
+        mRepositoryDao = mDataManager.getDaoSession().getRepositoryDao();
 
         mCoordinatorLayout = (CoordinatorLayout) findViewById(R.id.main_coordinator_container);
         mSignin = (Button) findViewById(R.id.login_btn);
@@ -83,8 +98,17 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
         saveUserData(userModel);
         saveUserPhotos(userModel);
 
-        Intent loginIntent = new Intent(this, MainActivity.class);
-        startActivity(loginIntent);
+        saveUserInDb();
+
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //Intent loginIntent = new Intent(this, MainActivity.class);
+                Intent loginIntent = new Intent(AuthActivity.this, UserListActivity.class);
+                startActivity(loginIntent);
+            }
+        }, AppConfig.START_DELAY);
     }
 
     private void signIn() {
@@ -153,5 +177,54 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
 
         mDataManager.getPreferencesManager().saveUserPhoto(photo);
         mDataManager.getPreferencesManager().saveUserAvatar(avatar);
+    }
+
+    private void saveUserInDb() {
+        Call<UserListRes> call = mDataManager.getUserListFromNetwork();
+
+        call.enqueue(new Callback<UserListRes>() {
+
+            @Override
+            public void onResponse(Call<UserListRes> call, Response<UserListRes> response) {
+                try {
+                    if (response.code() == 200) {
+
+                        List<Repository> allRepositories = new ArrayList<Repository>();
+                        List<User> allUsers = new ArrayList<User>();
+
+                        for (UserListRes.UserData userRes : response.body().getData()) {
+                            allRepositories.addAll(getRepoListFromUserRes(userRes));
+                            allUsers.add(new User(userRes));
+                        }
+
+                        mRepositoryDao.insertOrReplaceInTx(allRepositories);
+                        mUserDao.insertOrReplaceInTx(allUsers);
+
+                    } else {
+                        showSnackbar("Список пользователей не может быть получен!");
+                        Log.e(TAG, "OnResponse: " + String.valueOf(response.errorBody().source()));
+                    }
+                } catch( Exception e ) {
+                    e.printStackTrace();
+                    showSnackbar("Произошла ошибка в методе saveUserInDb");
+                }
+            }
+
+            @Override
+            public void onFailure(Call<UserListRes> call, Throwable t) {
+                // TODO: обработать ошибки
+            }
+        });
+    }
+
+    private List<Repository> getRepoListFromUserRes(UserListRes.UserData userData) {
+        final String userId = userData.getId();
+
+        List<Repository> repositories = new ArrayList<>();
+        for (UserModelRes.Repo repositoryRes : userData.getRepositories().getRepo()) {
+            repositories.add(new Repository(repositoryRes, userId));
+        }
+
+        return repositories;
     }
 }
