@@ -32,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.greenrobot.event.EventBus;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -67,6 +68,8 @@ public class AuthActivity extends BaseActivity implements View.OnClickListener {
 
         mRememberPassword.setOnClickListener(this);
         mSignin.setOnClickListener(this);
+
+
     }
 
     @Override

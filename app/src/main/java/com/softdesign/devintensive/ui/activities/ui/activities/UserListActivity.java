@@ -3,7 +3,9 @@ package com.softdesign.devintensive.ui.activities.ui.activities;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
@@ -17,6 +19,9 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.softdesign.devintensive.R;
 import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
@@ -50,6 +55,9 @@ public class UserListActivity extends AppCompatActivity{
 
     LinearLayoutManager mLinearLayoutManager;
 
+    public UserListActivity() {
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,6 +71,7 @@ public class UserListActivity extends AppCompatActivity{
         mNavigationDrawer = (DrawerLayout) findViewById(R.id.navigation_drawer);
         mRecyclerView = (RecyclerView) findViewById(R.id.user_list);
         mHandler = new Handler();
+
 
         mLinearLayoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(mLinearLayoutManager);
@@ -82,10 +91,26 @@ public class UserListActivity extends AppCompatActivity{
 
     }
 
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull final Bundle outState) {
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+    }
+
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        //dataFragment.setData(mUsers);
     }
 
     @Override
@@ -112,6 +137,25 @@ public class UserListActivity extends AppCompatActivity{
 
 
     private void setupDrawer() {
+        NavigationView navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        View header = navigationView.getHeaderView(0);
+
+        if (navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(MenuItem item) {
+                    if( item.getItemId() == R.id.user_profile_menu ) {
+                        Intent intent = new Intent(UserListActivity.this, MainActivity.class);
+                        startActivity(intent);
+                    }
+
+                    showSnackbar(item.getTitle().toString());
+                    item.setChecked(true);
+                    mNavigationDrawer.closeDrawer(GravityCompat.START);
+                    return false;
+                }
+            });
+        }
     }
 
     private void setupToolbar() {

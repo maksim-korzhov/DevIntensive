@@ -366,6 +366,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         mUserEmail = (TextView)header.findViewById(R.id.user_email_txt);
         mProfileAvatar = (ImageView) header.findViewById(R.id.small_rounded_user_icon);
 
+
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
                 @Override
@@ -377,6 +378,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 }
             });
         }
+
+
     }
 
     /**
