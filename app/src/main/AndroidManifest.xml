@@ -33,6 +33,15 @@
             </intent-filter>
             -->
         </activity>
+<!--        <activity
+            android:name=".ui.activities.ui.activities.SplashActivity"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>-->
         <activity android:name=".ui.activities.ui.activities.AuthActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -41,11 +50,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.activities.ui.activities.UserListActivity">
-            <intent-filter>
+<!--            <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
+            </intent-filter>-->
         </activity>
         <activity android:name=".ui.activities.ui.activities.ProfileUserActivity"
             android:parentActivityName=".ui.activities.ui.activities.UserListActivity">

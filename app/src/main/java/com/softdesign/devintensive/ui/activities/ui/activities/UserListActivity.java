@@ -141,7 +141,11 @@ public class UserListActivity extends AppCompatActivity{
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                showUserByQuery(newText);
+                if( newText == "" ) {
+                    showUsers(mUsers);
+                } else {
+                    showUserByQuery(newText);
+                }
                 return false;
             }
         });
