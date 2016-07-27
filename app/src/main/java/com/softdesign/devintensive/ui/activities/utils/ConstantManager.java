@@ -34,4 +34,5 @@ public interface ConstantManager {
     String PARCELABLE_KEY = "PARCELABLE_KEY";
 
     public float CURRENT_ASPECT_RATIO = 1.78f;
+    int SEARCH_DELAY = 1500;
 }

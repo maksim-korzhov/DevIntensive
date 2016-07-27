@@ -4,14 +4,14 @@ package com.softdesign.devintensive.ui.activities.ui.fragments;
 import android.app.Fragment;
 import android.os.Bundle;
 
-import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
+import com.softdesign.devintensive.ui.activities.data.storage.models.User;
 
 import java.util.List;
 
 
 public class RetainedFragment extends Fragment {
 
-    private List<UserListRes.UserData> mData;
+    private List<User> mData;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,11 +20,11 @@ public class RetainedFragment extends Fragment {
         setRetainInstance(true);
     }
 
-    public List<UserListRes.UserData> getData() {
+    public List<User> getData() {
         return mData;
     }
 
-    public void setData(List<UserListRes.UserData> data) {
+    public void setData(List<User> data) {
         mData = data;
     }
 }

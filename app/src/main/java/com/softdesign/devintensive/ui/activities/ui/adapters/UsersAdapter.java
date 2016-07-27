@@ -1,8 +1,9 @@
 package com.softdesign.devintensive.ui.activities.ui.adapters;
 
 import android.content.Context;
-import android.support.design.widget.Snackbar;
+import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,23 +11,25 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.softdesign.devintensive.R;
-import com.softdesign.devintensive.ui.activities.data.network.res.UserListRes;
+import com.softdesign.devintensive.ui.activities.data.managers.DataManager;
+import com.softdesign.devintensive.ui.activities.data.storage.models.User;
 import com.softdesign.devintensive.ui.activities.ui.views.AspectRatioImageView;
 import com.softdesign.devintensive.ui.activities.utils.ConstantManager;
-import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.NetworkPolicy;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHolder> {
 
+    private static final String TAG = ConstantManager.TAG_PREFIX + " UsersAdapter";
     private Context mContext;
-    private List<UserListRes.UserData> mUsers;
+    private List<User> mUsers;
     private UserViewHolder.CustomClickListener mCustomClickListener;
     private int mViewWidth;
     private int mViewHeight;
 
-    public UsersAdapter(List<UserListRes.UserData> users, UserViewHolder.CustomClickListener customClickListener) {
+    public UsersAdapter(List<User> users, UserViewHolder.CustomClickListener customClickListener) {
         mUsers = users;
         this.mCustomClickListener = customClickListener;
     }
@@ -44,27 +47,63 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
     }
 
     @Override
-    public void onBindViewHolder(UserViewHolder holder, int position) {
-        UserListRes.UserData user = mUsers.get(position);
+    public void onBindViewHolder(final UserViewHolder holder, int position) {
+        final User user = mUsers.get(position);
+        final String userPhoto;
+        if( user.getPhoto().isEmpty() ) {
+            userPhoto = "null";
+            Log.e(TAG, "onBindViewHolder: user with name " + user.getFullName() + " has no photo" );
+        } else {
+            userPhoto = user.getPhoto();
+        }
 
-        Picasso.with(mContext)
-                .load(user.getPublicInfo().getPhoto())
-                .placeholder(mContext.getResources().getDrawable(R.drawable.user_photo))
-                .error(mContext.getResources().getDrawable(R.drawable.user_photo))
-                .resize(mViewWidth, mViewHeight)
+        DataManager.getInstance().getPicasso()
+                .load(userPhoto)
+                .error(holder.mDummy)
+                .placeholder(holder.mDummy)
+                .fit()
                 .centerCrop()
-                .into(holder.userPhoto);
+                //.resize(mViewWidth, mViewHeight)
+                .networkPolicy(NetworkPolicy.OFFLINE)
+                .into(holder.userPhoto, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        Log.d(TAG, " load from cache");
+                    }
+
+                    @Override
+                    public void onError() {
+                        DataManager.getInstance().getPicasso()
+                                .load(userPhoto)
+                                .error(holder.mDummy)
+                                .placeholder(holder.mDummy)
+                                .fit()
+                                .centerCrop()
+                                //.resize(mViewWidth, mViewHeight)
+                                .into(holder.userPhoto, new Callback() {
+                                    @Override
+                                    public void onSuccess() {
+
+                                    }
+
+                                    @Override
+                                    public void onError() {
+                                        Log.d(TAG, " could not fetch image");
+                                    }
+                                });
+                    }
+                });
 
         holder.mFullName.setText(user.getFullName());
-        holder.mRating.setText(String.valueOf(user.getProfileValues().getRaiting()));
-        holder.mCodeLines.setText(String.valueOf(user.getProfileValues().getLinesCode()));
-        holder.mProjects.setText(String.valueOf(user.getProfileValues().getProjects()));
+        holder.mRating.setText(String.valueOf(user.getRating()));
+        holder.mCodeLines.setText(String.valueOf(user.getCodeLines()));
+        holder.mProjects.setText(String.valueOf(user.getProjects()));
 
-        if( user.getPublicInfo().getBio() == null || user.getPublicInfo().getBio().isEmpty() ) {
+        if( user.getBio() == null || user.getBio().isEmpty() ) {
             holder.mBio.setVisibility(View.GONE);
         } else {
             holder.mBio.setVisibility(View.VISIBLE);
-            holder.mBio.setText(user.getPublicInfo().getBio());
+            holder.mBio.setText(user.getBio());
         }
     }
 
@@ -78,6 +117,7 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
         protected AspectRatioImageView userPhoto;
         protected TextView mFullName, mRating, mCodeLines, mProjects, mBio;
         protected Button mShowMore;
+        protected Drawable mDummy;
 
         private CustomClickListener mListener;
 
@@ -92,6 +132,8 @@ public class UsersAdapter extends RecyclerView.Adapter<UsersAdapter.UserViewHold
             mProjects = (TextView) itemView.findViewById(R.id.projects_txt);
             mBio = (TextView) itemView.findViewById(R.id.bio_txt);
             mShowMore = (Button) itemView.findViewById(R.id.more_info_btn);
+
+            mDummy = userPhoto.getContext().getResources().getDrawable(R.drawable.user_photo);
 
             mShowMore.setOnClickListener(this);
         }
